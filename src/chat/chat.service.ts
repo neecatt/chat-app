@@ -25,8 +25,8 @@ export class ChatService {
           `The chat with name ${name} already exists.`,
         );
       }
-      const usersArray = users.map((username) => {
-        return { username };
+      const usersArray = users.map((userId) => {
+        return { id: Number(userId) };
       });
       const newChat = await this.prisma.chat.create({
         data: {
