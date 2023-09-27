@@ -10,6 +10,7 @@ import { ChatService } from './chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { Serialize } from 'src/common/interceptors/serialize.interceptor';
 import { ChatResponseDto } from './dto/chat-response.dto';
+import { FindChatsForUserDto } from './dto/find-chats-user.dto';
 
 @Controller('chat')
 @Serialize(ChatResponseDto)
@@ -19,6 +20,11 @@ export class ChatController {
   @Post('add')
   async create(@Body() createChatDto: CreateChatDto) {
     return await this.chatService.create(createChatDto);
+  }
+
+  @Post('get')
+  async findChatsForUser(@Body() findChatsForUserDto: FindChatsForUserDto) {
+    return await this.chatService.findChatsForUser(findChatsForUserDto);
   }
 
   @Get()
