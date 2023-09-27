@@ -50,10 +50,10 @@ Rename .env.example to .env.
 
 
 ## Routes
-http://localhost:9000/users/add
-http://localhost:9000/chats/add
-http://localhost:9000/chats/get
-http://localhost:9000/messages/add
-http://localhost:9000/messages/get
+* http://localhost:9000/users/add
+* http://localhost:9000/chats/add
+* http://localhost:9000/chats/get
+* http://localhost:9000/messages/add
+* http://localhost:9000/messages/get
 
 
