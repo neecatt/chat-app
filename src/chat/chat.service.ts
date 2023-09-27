@@ -13,7 +13,16 @@ import { Chat } from '@prisma/client';
 @Injectable()
 export class ChatService {
   constructor(private readonly prisma: PrismaService) {}
-  async create(createChatDto: CreateChatDto) {
+
+  /**
+   * Function to create a new chat
+   * @param {CreateChatDto} createChatDto - The createChatDto object
+   * @returns {Promise<Chat>} - The newly created chat
+   * @throws {ConflictException} - If the chat already exists
+   * @throws {BadRequestException} - If the users are not valid
+   * @throws {Error} - If any other error occurs
+   */
+  async create(createChatDto: CreateChatDto): Promise<Chat> {
     const { name, users } = createChatDto;
     try {
       const chat = await this.prisma.chat.findUnique({
@@ -47,9 +56,15 @@ export class ChatService {
     }
   }
 
-  async findAll() {
+  /**
+   * Function to find all chats
+   * @returns {Promise<Chat[]>} - The array of chats
+   * @throws {NotFoundException} - If no chats are found
+   * @throws {Error} - If any other error occurs
+   */
+  async findAll(): Promise<Chat[]> {
     try {
-      const chats = await this.prisma.chat.findMany({});
+      const chats = await this.prisma.chat.findMany();
       if (!chats.length) {
         throw new NotFoundException('No chats found');
       }
@@ -59,7 +74,14 @@ export class ChatService {
     }
   }
 
-  async findOneById(id: number) {
+  /**
+   * Function to find a chat by id
+   * @param {number} id - The id of the chat
+   * @returns {Promise<Chat>} - The chat
+   * @throws {NotFoundException} - If no chat is found
+   * @throws {Error} - If any other error occurs
+   */
+  async findOneById(id: number): Promise<Chat> {
     try {
       const chat = await this.prisma.chat.findUnique({
         where: {
@@ -67,7 +89,7 @@ export class ChatService {
         },
       });
       if (!chat) {
-        throw new NotFoundException(`Chat with id ${id} not found`);
+        throw new NotFoundException(`The Chat with id ${id} not found`);
       }
       return chat;
     } catch (error) {
@@ -75,26 +97,41 @@ export class ChatService {
     }
   }
 
-  async findChatsForUser(findChatsForUserDto: FindChatsForUserDto) {
+  /**
+   * Function to find a chat by userId
+   * @param {findChatsForUserDto} findChatsForUserDto - The findChatsForUserDto object
+   * @returns {Promise<Chat[]>} - Returns an array of chats which the user with given id is a part of and sorted by latest message in the chat
+   * @throws {NotFoundException} - If no chat is found
+   * @throws {Error} - If any other error occurs
+   */
+  async findChatsForUser(
+    findChatsForUserDto: FindChatsForUserDto,
+  ): Promise<Chat[]> {
     const { user } = findChatsForUserDto;
     const userId = Number(user);
 
-    const chats = await this.prisma.$queryRaw<Chat[]>`
-      SELECT c.*
-      FROM chats c
-      INNER JOIN _ChatToUser cu ON c.id = cu.A
-      INNER JOIN (
-      SELECT chatId, MAX(created_at) AS latest_message
-      FROM messages
-      GROUP BY chatId
-      ) AS latest_messages ON c.id = latest_messages.chatId
-      WHERE cu.B = ${userId}
-      ORDER BY latest_messages.latest_message DESC;
-    `;
+    try {
+      const chats = await this.prisma.$queryRaw<Chat[]>`
+        SELECT c.*
+        FROM chats c
+        INNER JOIN _ChatToUser cu ON c.id = cu.A
+        INNER JOIN (
+        SELECT chatId, MAX(created_at) AS latest_message
+        FROM messages
+        GROUP BY chatId
+        ) AS latest_messages ON c.id = latest_messages.chatId
+        WHERE cu.B = ${userId}
+        ORDER BY latest_messages.latest_message DESC;
+      `;
 
-    if (!chats.length) {
-      throw new NotFoundException(`No chats found for user with id ${userId}`);
+      if (!chats.length) {
+        throw new NotFoundException(
+          `No chats found for user with id ${userId}`,
+        );
+      }
+      return chats;
+    } catch (error) {
+      throw error;
     }
-    return chats;
   }
 }

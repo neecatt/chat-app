@@ -10,6 +10,14 @@ import { UserResponse } from './types';
 @Injectable()
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
+
+  /**
+   * Function to create a new user
+   * @param createUserDto - The createUserDto object
+   * @returns {Promise<UserResponse>} - The newly created user
+   * @throws {ConflictException} - If the user already exists
+   * @throws {Error} - If any other error occurs
+   */
   async create(createUserDto: CreateUserDto): Promise<UserResponse> {
     const { username } = createUserDto;
     try {
@@ -31,6 +39,12 @@ export class UsersService {
     }
   }
 
+  /**
+   * Function to find all users
+   * @returns {Promise<UserResponse[]>} - The users
+   * @throws {NotFoundException} - If no users are found
+   * @throws {Error} - If any other error occurs
+   */
   async findAll() {
     try {
       const users = await this.prisma.user.findMany({});
@@ -43,6 +57,13 @@ export class UsersService {
     }
   }
 
+  /**
+   * Function to find a user by id
+   * @param {number} id - The user id
+   * @returns {Promise<UserResponse>} - The user
+   * @throws {NotFoundException} - If the user is not found
+   * @throws {Error} - If any other error occurs
+   */
   async findOneById(id: number) {
     try {
       const user = await this.prisma.user.findUnique({

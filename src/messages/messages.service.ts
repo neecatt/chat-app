@@ -11,6 +11,14 @@ import { FindMessageDto } from './dto/find-message.dto';
 @Injectable()
 export class MessagesService {
   constructor(private readonly prisma: PrismaService) {}
+
+  /**
+   * Function to create a new message
+   * @param createMessageDto  - The createMessageDto object
+   * @returns {Promise<Message>} - The newly created message
+   * @throws {BadRequestException} - If the userId or chatId is not valid
+   * @throws {Error} - If any other error occurs
+   */
   async create(createMessageDto: CreateMessageDto) {
     const { text, author, chat } = createMessageDto;
     const userId = Number(author);
@@ -33,6 +41,13 @@ export class MessagesService {
     }
   }
 
+  /**
+   * Function to find all messages in a chat
+   * @param {FindMessageDto} findMessageDto - The findMessageDto object
+   * @returns {Promise<Message[]>} - The messages in the chat
+   * @throws {NotFoundException} - If no messages are found
+   * @throws {Error} - If any other error occurs
+   */
   async findMessageInChat(findMessageDto: FindMessageDto) {
     const { chat } = findMessageDto;
     const chatId = Number(chat);
