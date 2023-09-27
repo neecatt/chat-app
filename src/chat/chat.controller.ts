@@ -12,7 +12,7 @@ import { Serialize } from 'src/common/interceptors/serialize.interceptor';
 import { ChatResponseDto } from './dto/chat-response.dto';
 import { FindChatsForUserDto } from './dto/find-chats-user.dto';
 
-@Controller('chat')
+@Controller('chats')
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
