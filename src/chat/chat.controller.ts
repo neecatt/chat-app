@@ -8,8 +8,11 @@ import {
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
+import { Serialize } from 'src/common/interceptors/serialize.interceptor';
+import { ChatResponseDto } from './dto/chat-response.dto';
 
 @Controller('chat')
+@Serialize(ChatResponseDto)
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
