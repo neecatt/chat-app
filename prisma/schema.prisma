@@ -14,7 +14,7 @@ model User {
   id        Int       @id @default(autoincrement())
   username  String    @unique
   chats     Chat[]
-  Message   Message[]
+  messages  Message[]
   createdAt DateTime  @default(now()) @map("created_at")
 
   @@map("users")
@@ -24,7 +24,7 @@ model Chat {
   id        Int       @id @default(autoincrement())
   name      String    @unique
   users     User[]
-  Message   Message[]
+  messages  Message[]
   createdAt DateTime  @default(now()) @map("created_at")
 
   @@map("chats")
