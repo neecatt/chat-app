@@ -13,11 +13,11 @@ import { ChatResponseDto } from './dto/chat-response.dto';
 import { FindChatsForUserDto } from './dto/find-chats-user.dto';
 
 @Controller('chat')
-@Serialize(ChatResponseDto)
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
   @Post('add')
+  @Serialize(ChatResponseDto)
   async create(@Body() createChatDto: CreateChatDto) {
     return await this.chatService.create(createChatDto);
   }
