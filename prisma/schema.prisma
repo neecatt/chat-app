@@ -13,7 +13,17 @@ datasource db {
 model User {
   id        Int      @id @default(autoincrement())
   username  String   @unique
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(now()) @map("created_at")
+  chats     Chat[]
 
   @@map("users")
+}
+
+model Chat {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  users     User[]
+
+  @@map("chats")
 }
