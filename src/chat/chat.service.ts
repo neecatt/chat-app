@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -44,11 +45,31 @@ export class ChatService {
     }
   }
 
-  findAll() {
-    return `This action returns all chat`;
+  async findAll() {
+    try {
+      const chats = await this.prisma.chat.findMany({});
+      if (!chats.length) {
+        throw new NotFoundException('No chats found');
+      }
+      return chats;
+    } catch (error) {
+      throw error;
+    }
   }
 
-  findOneById(id: number) {
-    return `This action returns a #${id} chat`;
+  async findOneById(id: number) {
+    try {
+      const chat = await this.prisma.chat.findUnique({
+        where: {
+          id,
+        },
+      });
+      if (!chat) {
+        throw new NotFoundException(`Chat with id ${id} not found`);
+      }
+      return chat;
+    } catch (error) {
+      throw error;
+    }
   }
 }
