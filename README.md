@@ -38,13 +38,18 @@ Rename .env.example to .env.
    ```sh
    npx prisma generate
    ```
+6. Push the schema into the database using:
 
-6. Run the application:
+   ```sh
+   npx prisma db push
+   ```
+
+7. Run the application:
    ```sh
    npm run start:dev
    ```
 
-7. Access the application:
+8. Access the application:
 
 * The application will be running at http://localhost:9000.
 
